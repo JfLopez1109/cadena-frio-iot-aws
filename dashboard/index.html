@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadena de Frío IoT | Panel de monitoreo</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="app.js"></script>
+  <script defer src="auth-control.js"></script>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="identity"><span class="snow" aria-hidden="true">❄</span><div><h1>Cadena de Frío IoT</h1><p>Monitoreo de vacunas en tiempo real</p></div></div>
+      <div class="connection" id="connection"><span class="connection-dot"></span><span id="connectionText">Esperando conexión con AWS</span></div>
+    </header>
+
+    <section class="banner waiting" id="alertBanner" aria-live="polite">
+      <div class="banner-symbol" id="bannerIcon">◷</div><div class="banner-copy"><h2 id="alertTitle">Esperando mediciones</h2><p id="alertDescription">Configura la API para recibir las lecturas reales almacenadas en DynamoDB.</p></div>
+      <div class="safe-range"><span>Rango configurado</span><strong>2 °C a 8 °C</strong></div>
+    </section>
+
+    <section class="metrics" aria-label="Indicadores">
+      <article class="metric"><div class="metric-icon temp-icon">♨</div><div><p class="metric-name">Temperatura actual</p><strong class="metric-value" id="temperature">-- °C</strong><span class="pill neutral" id="tempLabel">Sin lectura</span></div></article>
+      <article class="metric"><div class="metric-icon hum-icon">💧</div><div><p class="metric-name">Humedad actual</p><strong class="metric-value" id="humidity">-- %</strong><span class="subtle">Humedad relativa del ambiente</span></div></article>
+      <article class="metric"><div class="metric-icon cloud-icon">☁</div><div><p class="metric-name">Estado AWS</p><strong class="metric-value aws-value" id="awsState">Pendiente</strong><span class="subtle" id="lastSync">Sin sincronización</span></div></article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel history-panel"><div class="panel-header"><div><h2>▥ Historial de temperatura</h2><p>Últimas lecturas recuperadas de DynamoDB</p></div><span class="panel-meta" id="pointsCount">0 registros</span></div>
+        <div class="chart-wrapper"><svg id="chart" viewBox="0 0 800 290" role="img" aria-label="Historial de temperatura"></svg></div>
+        <div class="chart-legend"><span><i class="legend-dot"></i> Temperatura (°C)</span><span><i class="legend-safe"></i> Rango permitido (2–8 °C)</span></div>
+      </article>
+      <article class="panel info-panel"><h2>▣ Información del dispositivo</h2>
+        <div class="info-row"><span>ID del dispositivo</span><strong>ESP32-CadenaFrio</strong></div>
+        <div class="info-row"><span>Sensor</span><strong>DHT22 · GPIO 4</strong></div>
+        <div class="info-row"><span>Comunicación</span><strong>MQTT/TLS · AWS IoT Core</strong></div>
+        <div class="info-row"><span>Último registro</span><strong id="lastReading">Sin datos</strong></div>
+        <div class="info-row"><span>Frecuencia configurada</span><strong>5 segundos</strong></div>
+        <div class="info-row"><span>Registros consultados</span><strong id="recordCount">0</strong></div>
+      </article>
+    </section>
+
+    <section class="content-grid lower-grid">
+      <article class="panel controls-panel"><div class="panel-header"><div><h2>◉ Control remoto del LED</h2><p>LED azul integrado · GPIO 2</p></div></div>
+        <div class="led-state"><span class="bulb" id="bulb">●</span><div><strong id="ledState">Estado no confirmado</strong><p>Los comandos se enviarán al topic <code>cadena-frio/control</code> mediante la API segura.</p></div></div>
+        <div class="control-buttons"><button id="turnOn" class="btn blue" disabled>Encender LED</button><button id="turnOff" class="btn outline" disabled>Apagar LED</button></div>
+        <p class="feedback" id="controlFeedback" role="status">Control deshabilitado hasta configurar la API de AWS.</p>
+      </article>
+      <article class="panel quick-panel"><h2>◷ Estado del sistema</h2>
+        <div class="info-row"><span>Consulta a AWS</span><strong id="apiHealth">No configurada</strong></div>
+        <div class="info-row"><span>Historial</span><strong>Amazon DynamoDB</strong></div>
+        <div class="info-row"><span>Control</span><strong>AWS IoT Core</strong></div>
+        <div class="info-row"><span>Publicación web</span><strong>Amazon S3</strong></div>
+        <p class="safety-note">El dashboard no almacena certificados, claves privadas ni credenciales de AWS.</p>
+      </article>
+    </section>
+
+    <section class="panel table-panel"><div class="panel-header recent-header"><div><h2>☷ Lecturas recientes</h2><p>Registros del dispositivo, ordenados de más reciente a más antiguo</p></div><button class="btn outline" id="downloadCsv" disabled>↓ Descargar CSV</button></div>
+      <div class="table-scroll"><table><thead><tr><th>Fecha y hora</th><th>Temperatura</th><th>Humedad</th><th>Alerta</th></tr></thead><tbody id="recordsBody"><tr><td colspan="4" class="empty">No hay datos disponibles. Configura la API para consultar DynamoDB.</td></tr></tbody></table></div>
+      <p class="footnote">Las lecturas y los estados de control deben provenir de AWS. No se muestran datos inventados como si fueran reales.</p>
+    </section>
+    <footer>Proyecto piloto académico · Cadena de Frío IoT · ESP32 + AWS IoT Core + DynamoDB</footer>
+  </main>
+</body>
+</html>
