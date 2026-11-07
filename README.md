@@ -84,86 +84,12 @@ LED integrado (GPIO 2)
 
 ### 3.3. Diagrama general de arquitectura
 
-El siguiente diagrama reúne el flujo de monitoreo, almacenamiento, consulta y control remoto. Se incluye como diagrama Mermaid para que GitHub lo pueda representar directamente dentro de este README.
+<p align="center">
+  <img src="dashboard/cadena-de-frio-iot-serverless-en-aws.png" alt="Diagrama original de arquitectura de cadena de frío IoT serverless en AWS" width="100%">
+</p>
 
-```mermaid
-flowchart LR
-    subgraph EXT["Componentes externos"]
-        SENSOR["DHT22<br/>GPIO 4"]
-        ESP["ESP32<br/>LED GPIO 2"]
-        USER["Usuario<br/>Navegador"]
-    end
+**Figura.** Arquitectura general de la solución de cadena de frío IoT serverless en AWS.
 
-    subgraph AWS["Servicios AWS — us-east-1"]
-        IOT["AWS IoT Core<br/>MQTT / TLS"]
-        RULE["Regla de AWS IoT"]
-        DB[("Amazon DynamoDB<br/>CadenaFrio-Lecturas")]
-        LREAD["Lambda de lecturas<br/>URL de consulta"]
-        LCTRL["Lambda de control"]
-        APIGW["API Gateway<br/>POST /control"]
-        COG["Amazon Cognito<br/>OAuth 2.0 + PKCE"]
-        AUTH["Autorizador JWT<br/>API Gateway"]
-        S3["Amazon S3<br/>Archivos estáticos"]
-        AMP["AWS Amplify Hosting<br/>Dashboard HTTPS"]
-    end
-
-    SENSOR -->|"Lecturas"| ESP
-    ESP -->|"MQTT/TLS: cadena-frio/datos"| IOT
-    IOT --> RULE
-    RULE -->|"Inserta mediciones"| DB
-    DB -->|"Consulta últimas 50"| LREAD
-    LREAD -->|"JSON de lecturas"| AMP
-    USER --> AMP
-
-    USER -->|"Inicia sesión"| AMP
-    AMP <-->|"Autenticación / token"| COG
-    AMP -->|"POST /control + Bearer JWT"| APIGW
-    APIGW --> AUTH
-    COG -.->|"Emite JWT; claves públicas para validación"| AUTH
-    AUTH -->|"Token válido"| LCTRL
-    LCTRL -->|"Publica ON/OFF"| IOT
-    IOT -->|"cadena-frio/control"| ESP
-    ESP -->|"Acciona"| SENSOR
-
-    S3 -.->|"Almacena copia de archivos web"| AMP
-
-    classDef backend fill:#073b36,stroke:#10b981,color:#e5fff8
-    classDef database fill:#2b1855,stroke:#a78bfa,color:#f3eaff
-    classDef cloud fill:#38251b,stroke:#f59e0b,color:#fff4dc
-    classDef external fill:#202c3d,stroke:#94a3b8,color:#eef5ff
-    class IOT,RULE,LREAD,LCTRL backend
-    class DB database
-    class APIGW,COG,AUTH,S3,AMP cloud
-    class SENSOR,ESP,USER external
-```
-
-**Cómo interpretar el diagrama:**
-
-- **Monitoreo:** el DHT22 entrega las mediciones a la ESP32; esta las publica por MQTT/TLS en AWS IoT Core. Una regla de IoT Core las inserta en DynamoDB. La Lambda de lecturas consulta los últimos 50 registros y los entrega al dashboard.
-- **Control remoto:** el usuario inicia sesión en Cognito desde el dashboard. Cognito emite un JWT; API Gateway valida ese token mediante su autorizador JWT antes de invocar la Lambda de control. La Lambda publica el comando en el tópico MQTT de control y la ESP32 lo recibe para accionar el LED.
-- **Publicación web:** Amplify Hosting entrega el dashboard mediante HTTPS. Amazon S3 almacena los archivos estáticos que se cargaron para la práctica.
-
-**Importante:** Cognito emite los tokens; quien valida el JWT en cada solicitud protegida es el autorizador de API Gateway. Una respuesta exitosa de la API confirma que el backend publicó el comando en AWS IoT Core, pero no constituye por sí sola una confirmación física del LED. La ejecución se verificó observando el LED y los mensajes del Monitor Serie de la ESP32.
-
-## 4. Estructura del repositorio
-
-```text
-cadena-frio-iot-aws/
-├── dashboard/
-│   ├── index.html
-│   ├── style.css
-│   ├── app.js
-│   └── auth-control.js
-├── esp32/
-│   ├── sketch_nov4a.ino
-│   ├── secrets.example.h
-│   └── certificados.example.h
-├── lambda/
-│   ├── CadenaFrio_LecturasPublicas.py
-│   └── CadenaFrio_API.py
-├── .gitignore
-└── README.md
-```
 
 ### Descripción de los archivos
 
