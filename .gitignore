@@ -1,0 +1,28 @@
+# Credenciales y certificados privados del firmware
+secrets.h
+certificados.h
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+
+# Credenciales AWS y variables locales
+.aws/
+.env
+.env.*
+!.env.example
+credentials
+config.local
+
+# Herramientas de desarrollo / archivos generados
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+node_modules/
+dist/
+build/
+*.zip
