@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1535" height="1024" viewBox="0 0 1535 1024" role="img" aria-labelledby="title desc">
+<title id="title">Arquitectura de Cadena de Frío IoT serverless en AWS</title>
+<desc id="desc">ESP32 con DHT22 publica mediciones por MQTT TLS a AWS IoT Core, que las almacena en DynamoDB. Lambda consulta las lecturas para el dashboard. El usuario inicia sesión con Cognito y envía comandos autenticados por API Gateway y Lambda de control hacia AWS IoT Core y la ESP32.</desc>
+<defs>
+ <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#243149"/></pattern>
+ <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#34d399"/></marker>
+ <marker id="arrowGray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#94a3b8"/></marker>
+ <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#a78bfa"/></marker>
+ <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#fb7185"/></marker>
+ <style>
+ .h{font:700 30px Arial,sans-serif;fill:#f8fafc}.boxTitle{font:700 15px Arial,sans-serif;fill:#f8fafc}.sub{font:13px Arial,sans-serif;fill:#94a3b8}.tag{font:12px monospace;fill:#a5b4fc}.legend{font:14px Arial,sans-serif;fill:#94a3b8}.cloud{fill:#2b211f;stroke:#f59e0b;stroke-width:1.8}.backend{fill:#062c2b;stroke:#10b981;stroke-width:1.8}.db{fill:#241746;stroke:#a78bfa;stroke-width:1.8}.external{fill:#172235;stroke:#94a3b8;stroke-width:1.8}
+ </style>
+</defs>
+<rect width="1535" height="1024" fill="#030817"/>
+<text x="66" y="68" class="h">● Cadena de frío IoT serverless en AWS</text>
+<rect x="36" y="104" width="1463" height="850" rx="24" fill="#081225" stroke="#243149" stroke-width="1.5"/>
+<rect x="36" y="104" width="1463" height="850" rx="24" fill="url(#dots)"/>
+<rect x="348" y="321" width="892" height="511" rx="18" fill="none" stroke="#8b6b24" stroke-width="1.5"/>
+<rect x="382" y="338" width="112" height="28" rx="8" fill="#332b20" stroke="#9b782c"/><text x="438" y="357" text-anchor="middle" class="tag" fill="#fbbf24">AWS us-east-1</text>
+<!-- nodes -->
+<rect x="95" y="361" width="200" height="73" rx="12" class="external"/>
+<text x="195" y="390" text-anchor="middle" class="boxTitle">ESP32 + DHT22</text><text x="195" y="414" text-anchor="middle" class="sub">GPIO 4 | LED GPIO 2</text>
+<rect x="388" y="361" width="227" height="73" rx="12" class="cloud"/>
+<text x="501" y="390" text-anchor="middle" class="boxTitle">AWS IoT Core</text><text x="501" y="414" text-anchor="middle" class="sub">MQTT/TLS | reglas</text>
+<rect x="681" y="361" width="226" height="73" rx="12" class="db"/>
+<text x="794" y="390" text-anchor="middle" class="boxTitle">DynamoDB</text><text x="794" y="414" text-anchor="middle" class="sub">CadenaFrio-Lecturas</text>
+<rect x="973" y="361" width="227" height="73" rx="12" class="backend"/>
+<text x="1086" y="390" text-anchor="middle" class="boxTitle">Lambda lecturas</text><text x="1086" y="414" text-anchor="middle" class="sub">URL pública | 50 datos</text>
+<rect x="388" y="560" width="227" height="73" rx="12" class="backend"/>
+<text x="501" y="589" text-anchor="middle" class="boxTitle">Lambda control</text><text x="501" y="613" text-anchor="middle" class="sub">Publica ON/OFF en IoT Core</text>
+<rect x="681" y="560" width="226" height="73" rx="12" class="cloud"/>
+<text x="794" y="589" text-anchor="middle" class="boxTitle">API Gateway</text><text x="794" y="613" text-anchor="middle" class="sub">POST /control | autorizador JWT</text>
+<rect x="973" y="560" width="227" height="73" rx="12" class="cloud"/>
+<text x="1086" y="589" text-anchor="middle" class="boxTitle">Dashboard web</text><text x="1086" y="613" text-anchor="middle" class="sub">Amplify HTTPS + S3</text>
+<rect x="973" y="733" width="227" height="73" rx="12" class="cloud"/>
+<text x="1086" y="762" text-anchor="middle" class="boxTitle">Amazon Cognito</text><text x="1086" y="786" text-anchor="middle" class="sub">Login OAuth 2.0 + PKCE</text>
+<rect x="1265" y="560" width="148" height="73" rx="12" class="external"/>
+<text x="1339" y="589" text-anchor="middle" class="boxTitle">Usuario</text><text x="1339" y="613" text-anchor="middle" class="sub">Navegador</text>
+<!-- arrows -->
+<path d="M295 398 H388" fill="none" stroke="#34d399" stroke-width="2.2" marker-end="url(#arrowGreen)"/>
+<text x="341" y="354" text-anchor="middle" class="tag">MQTT datos</text>
+<path d="M615 398 H681" fill="none" stroke="#94a3b8" stroke-width="2.2" marker-end="url(#arrowGray)"/>
+<text x="648" y="354" text-anchor="middle" class="tag">Regla IoT</text>
+<path d="M973 398 H907" fill="none" stroke="#94a3b8" stroke-width="2.2" marker-end="url(#arrowGray)"/>
+<text x="940" y="354" text-anchor="middle" class="tag">consulta</text>
+<path d="M1086 434 V560" fill="none" stroke="#94a3b8" stroke-width="2.2" marker-end="url(#arrowGray)"/>
+<text x="1158" y="500" class="tag">GET lecturas</text>
+<path d="M1265 597 H1200" fill="none" stroke="#34d399" stroke-width="2.2" marker-end="url(#arrowGreen)"/>
+<text x="1232" y="551" text-anchor="middle" class="tag">Acceso web</text>
+<path d="M973 597 H907" fill="none" stroke="#fb7185" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#arrowRed)"/>
+<text x="940" y="551" text-anchor="middle" class="tag">POST + token</text>
+<path d="M794 560 V500 H501 V434" fill="none" stroke="#94a3b8" stroke-width="2.2" marker-end="url(#arrowGray)"/>
+<text x="650" y="489" text-anchor="middle" class="tag">invoca Lambda</text>
+<path d="M973 770 H794 V633" fill="none" stroke="#a78bfa" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#arrowPurple)"/>
+<text x="877" y="754" text-anchor="middle" class="tag">JWT validado por API Gateway</text>
+<path d="M1086 733 V633" fill="none" stroke="#94a3b8" stroke-width="2.2" marker-end="url(#arrowGray)"/>
+<text x="1160" y="690" class="tag">login</text>
+<!-- command loop -->
+<path d="M501 560 V301 H195 V361" fill="none" stroke="#a78bfa" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#arrowPurple)"/>
+<text x="348" y="291" text-anchor="middle" class="tag">ON / OFF vía IoT Core → ESP32</text>
+<!-- legend -->
+<text x="121" y="878" class="boxTitle">Leyenda</text>
+<rect x="121" y="894" width="22" height="14" rx="3" class="backend"/><text x="153" y="907" class="legend">Backend</text>
+<rect x="267" y="894" width="22" height="14" rx="3" class="db"/><text x="299" y="907" class="legend">Base de datos</text>
+<rect x="420" y="894" width="22" height="14" rx="3" class="cloud"/><text x="452" y="907" class="legend">Servicios AWS</text>
+<rect x="574" y="894" width="22" height="14" rx="3" class="external"/><text x="606" y="907" class="legend">Componentes externos</text>
+</svg>
